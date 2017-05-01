@@ -27,7 +27,7 @@
 
 /** Luego definimos los prototipos de las funciones **/
 // Implementar función menu
-
+int menu();
 
 // Implementar función leer_de_fichero
 
@@ -118,3 +118,28 @@ void SystemPause(){
   getchar ();
 }
 
+/* Funcion menu.
+ * Esta función muestra un menú y pide la introducción de una opción correcta
+ *	Argumentos:
+ *  Retorno: Valor introducido por el ususario.
+ */
+int menu(){
+	int opcion = -1;
+	while (opcion>4 || opcion<0) {
+		printf ("BANCO CO \n");
+		printf ("----------\n");
+		printf (" 0.Salir.\n");
+		printf (" 1.Consultar saldo de una cuenta.\n");
+		printf (" 2.Realizar transferencia\n");
+		printf (" 3.Saldo global del banco.\n");
+		printf (" 4.Cobrar intereses.\n");
+		
+		printf ("Elija opcion:\n");
+		scanf ("%d", &opcion);
+		
+		if (opcion>4 || opcion<0) {
+			printf ("Opcion incorrecta. Por favor, indique una opcion válida.");
+		}
+	}
+	return opcion;
+}
