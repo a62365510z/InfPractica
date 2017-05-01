@@ -36,18 +36,20 @@ int leer_de_fichero(int cod[], float saldo[]);
 int escribir_a_fichero(int cod[], float saldo[]);
 
 // Implementar función saldo_cuenta
-
+void saldo_cuenta(int cod[], float saldo[]);
 
 // Implementar función transferencia
-
+void transferencia(int cod[], float saldo[]);
 
 // Implementar función saldo_global
-
+float saldo_global(int cod[], float saldo[], int *imin, int *imax);
 
 // Implementar función cobrar_intereses
+void cobrar_intereses(int cod[], float saldo[]);
 
 void SystemPause();
 
+/** Función main, llamada como primera función por el SO **/
 int main()
 {
   int opc, err, imin, imax;
@@ -68,31 +70,31 @@ int main()
       switch ( opc ) {
         
         case 1:
-          saldo_cuenta(cod,saldo);
+          saldo_cuenta(cod, saldo);
         break;
         
         case 2:
-          transferencia(cod,saldo);
+          transferencia(cod, saldo);
         break;
         
         case 3:
-          total = saldo_global(cod,saldo,&imin,&imax);
-          printf("\nEn el banco hay ahora %.2f euros.\n",total);
+          total = saldo_global(cod, saldo, &imin, &imax);
+          printf("\nEn el banco hay ahora %.2f euros.\n", total);
           printf("La cuenta con menos dinero (%.2f euros) es la %03d y pertenece a %03d.\n",
-            saldo[imin],imin,cod[imin]);
+            saldo[imin], imin, cod[imin]);
           printf("La cuenta con mas dinero (%.2f euros) es la %03d y pertenece a %03d.\n",
-            saldo[imax],imax,cod[imax]);
+            saldo[imax], imax, cod[imax]);
         break;
         
         case 4:
-          cobrar_intereses(cod,saldo);
+          cobrar_intereses(cod, saldo);
         break;
         
       }
       
     } while ( opc != 0 );
     
-    err = escribir_a_fichero(cod,saldo);
+    err = escribir_a_fichero(cod, saldo);
     if ( err != 0 ) {
       printf("\nError en la escritura del archivo de datos.\n\n");
       SystemPause();
@@ -122,36 +124,36 @@ void SystemPause(){
  *  Retorno: Valor introducido por el ususario.
  */
 int menu(){
-	int opcion = -1;
-	while (opcion>4 || opcion<0) {
+	int opcion;
+	do{
 		printf ("BANCO CO \n");
 		printf ("----------\n");
 		printf (" 0.Salir.\n");
 		printf (" 1.Consultar saldo de una cuenta.\n");
 		printf (" 2.Realizar transferencia\n");
 		printf (" 3.Saldo global del banco.\n");
-		printf (" 4.Cobrar intereses.\n");
+		printf (" 4.Cobrar intereses.\n\n");
 		
-		printf ("Elija opcion:\n");
+		printf ("Elija opcion: ");
 		scanf ("%d", &opcion);
 		
 		if (opcion>4 || opcion<0) {
-			printf ("Opcion incorrecta. Por favor, indique una opcion válida.");
+			printf ("Opcion incorrecta. Por favor, indique una opcion válida.\n\n");
 		}
-	}
+	}while(opcion>4 || opcion<0);
 	return opcion;
 }
 
 /* Funcion leer_de_fichero.
  * Esta función recoge los valores del archivo de cuentas y los devuelve por
  * referencia como vectores cod y saldo
- *	Argumentos: vector de ints cod, vector de ints saldo
- *  Retorno: Error al leer un fichero.
+ *	- Parámetros de entrada: Vectores de códigos de clientes y de saldos.
+ *  - Valor de retorno: Error al leer un fichero.
  */
 int leer_de_fichero(int cod[], float saldo[]){
   FILE *cuentas;
   cuentas = fopen (DATOS, "r" );
-  if (cuentas == NULL) return -1;
+  if (cuentas == NULL) return 1;
   for(int i=0; fscanf(cuentas, "%d %f", &cod[i], &saldo[i]) != EOF; i++);
   fclose (cuentas);
   return 0;
@@ -159,16 +161,82 @@ int leer_de_fichero(int cod[], float saldo[]){
 
 /* Funcion escribir_a_fichero.
  * Esta función guarda los valores de los vectores en el archivo de cuentas
- *	Argumentos: vector de ints cod, vector de ints saldo
- *  Retorno: Error al abrir un fichero.
+ *	- Parámetros de entrada: Vectores de códigos de clientes y de saldos.
+ *  - Valor de retorno: Error al abrir un fichero.
  */
 int escribir_a_fichero(int cod[], float saldo[]){
   FILE *cuentas;
   cuentas = fopen (DATOS, "w" );
-  if (cuentas == NULL) return -1;
+  if (cuentas == NULL) return 1;
   for(int i=0; i < MAX_CUENTAS ; i++){
     fprintf(cuentas, "%d %.2f\r\n",cod[i], saldo[i]) ;
   }
   fclose (cuentas);
   return 0;
+}
+
+
+/* Funcion saldo_cuenta.
+ * Saldo de una cuenta. Se pregunta al usuario por un código de cuenta, verificando
+ * que está en el rango válido, y se muestra su saldo (indicando si es positivo o
+ * negativo) o un aviso de que esa cuenta está sin usar.
+ * - Parámetros de entrada: Vectores de códigos de clientes y de saldos.
+ * - Valor de retorno: Ninguno.
+ */
+void saldo_cuenta(int cod[], float saldo[]){
+
+}
+
+
+/* Funcion transferencia.
+ * Realizar transferencia. Se pregunta por dos códigos de cuenta, que deberán ser
+ * válidos y pertenecientes a cuentas en uso, y una cantidad que se tratará de
+ * transferir de una cuenta a la otra. El banco permite pequeños descubiertos en las
+ * cuentas, de como máximo el valor de la constante MAX_DESCUBIERTO (que por
+ * defecto vale 100). Si se va a superar ese descubierto, no se realiza la transferencia,
+ * informando al usuario. Si no se supera, se realiza la transferencia restando la
+ * cantidad indicada de la primera cuenta y sumándosela a la segunda. Si el dueño de
+ * ambas cuentas no coincide, se cobrará una comisión de 20 céntimos (el valor de la
+ * constante COMISION ) a la cuenta origen de la transferencia, ingresando esa
+ * cantidad en la cuenta del banco (código COD_BANCO ). Si ambas cuentas son del
+ * mismo cliente, se considera un traspaso entre sus cuentas y no se cobra comisión.
+ * 
+ * - Parámetros de entrada/salida: Vectores de códigos de clientes y de saldos.
+ * - Valor de retorno: Ninguno.
+ * 
+ */
+void transferencia(int cod[], float saldo[]){
+  
+}
+
+
+/* Funcion saldo_global.
+ * Saldo global del banco. Se mostrará por pantalla la suma de todos los saldos de
+ * las cuentas en uso, que es el total de dinero que hay en el banco. También se
+ * indicará el número y saldo de la cuenta con menos dinero y de la cuenta con más
+ * dinero.
+ * 
+ * - Parámetros de entrada: Vectores de códigos de clientes y de saldos.
+ * - Parámetros de entrada/salida: Los códigos de las cuentas con menor y
+ * mayor saldo.
+ * - Valor de retorno: Número real. Saldo total sumando los saldos de todas las
+ * cuentas. Es conveniente no incluir las cuentas no usadas, por si alguna
+ * tiene un saldo no nulo.
+ */
+float saldo_global(int cod[], float saldo[], int *imin, int *imax){
+  
+}
+
+
+/* Funcion cobrar_intereses.
+ * Cobro de intereses en las cuentas deudoras. Se cargará en todas las cuentas con
+ * saldo negativo un interés del 10% (definido en la constante INTERES )
+ * proporcional a la cantidad adeudada, ingresando estos valores en la cuenta del
+ * banco.
+
+ * - Parámetros de entrada/salida: Vectores de códigos de clientes y de saldos.
+ * - Valor de retorno: Ninguno.
+ */
+void cobrar_intereses(int cod[], float saldo[]){
+  
 }
