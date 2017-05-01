@@ -217,7 +217,34 @@ void saldo_cuenta(int cod[], float saldo[]){
  *
  */
 void transferencia(int cod[], float saldo[]){
+  int indice_o, indice_d;
+  float cantidad = 0;
+  indice_o = pide_codigo();
+  printf("ORIGEN: Cuenta %03d de cliente %d. Saldo actual: %.2f\n", indice_o, cod[indice_o], saldo[indice_o]);
+  indice_d = pide_codigo();
+  printf("Destino: Cuenta %03d de cliente %d. Saldo actual: %.2f\n", indice_d, cod[indice_d], saldo[indice_d]);
   
+  do{
+    printf ("Cantidad a transferir: ");
+    scanf ("%f", &cantidad);
+    if(cantidad <= 0){
+      printf("Debe indicar una cantidad positiva.\n\n");
+    }
+  }while(cantidad <= 0);
+  
+  if( (saldo[indice_o] - cantidad) < (-MAX_DESCUBIERTO) ){
+    printf("La transferencia no se realiza por falta de fondos.\n\n");
+  }else{
+    saldo[indice_o]  -= cantidad;
+    saldo[indice_d]  += cantidad;
+    
+    if(cod[indice_o] != cod[indice_d]){
+      saldo[indice_o]  -= COMISION;
+      saldo[COD_BANCO] += COMISION;
+    }
+    
+    printf("Transferencia realizada satisfactoriamente.\n\n");
+  }
 }
 
 
@@ -258,7 +285,7 @@ int pide_codigo(){
     printf("Codigo de la cuenta a consultar (0-%d): ", MAX_CUENTAS-1);
     scanf ("%d", &indice);
     if(indice < 0 || indice >= MAX_CUENTAS){
-      printf("\nError: Seleccione una cuenta entre 0 y %d.", MAX_CUENTAS-1);
+      printf("\nCodigo de cuenta no aceptado. Repita, por favor.\n\n");
     }
   }while(indice < 0 || indice >= MAX_CUENTAS);
   return indice;
