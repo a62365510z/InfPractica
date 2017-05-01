@@ -1,53 +1,55 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 
-// N鷐ero m醲imo de cuentas
+// N煤mero m谩ximo de cuentas
 #define MAX_CUENTAS 1000
 
-// C骴igo de la cuenta del banco
+// C贸digo de la cuenta del banco
 #define COD_BANCO 0
 
-// Las cuentas sin usar tienen en c骴igo de cliente este valor:
+// Las cuentas sin usar tienen en c贸digo de cliente este valor:
 #define LIBRE -1
 
 // Ruta al archivo de datos
 #define DATOS "cuentas.txt"
 
-// Comisi髇 a cobrar por cada transferencia (excepto entre cuentas propias)
+// Comisi贸n a cobrar por cada transferencia (excepto entre cuentas propias)
 #define COMISION 0.20
 
-// L韒ite m醲imo de descubierto permitido al realizar una transferencia
-// (sin tener en cuenta la comisi髇 por la transferencia)
+// L铆mite m谩ximo de descubierto permitido al realizar una transferencia
+// (sin tener en cuenta la comisi贸n por la transferencia)
 #define MAX_DESCUBIERTO 100.00
 
 // Porcentaje (en tanto por cien) a cobrar sobre descubiertos
 #define INTERES 10.0
 
 
-// Implementar funci髇 menu
+// Implementar funci贸n menu
 
 
-// Implementar funci髇 leer_de_fichero
+// Implementar funci贸n leer_de_fichero
 
 
-// Implementar funci髇 escribir_a_fichero
+// Implementar funci贸n escribir_a_fichero
 
 
-// Implementar funci髇 saldo_cuenta
+// Implementar funci贸n saldo_cuenta
 
 
-// Implementar funci髇 transferencia
+// Implementar funci贸n transferencia
 
 
-// Implementar funci髇 saldo_global
+// Implementar funci贸n saldo_global
 
 
-// Implementar funci髇 cobrar_intereses
+// Implementar funci贸n cobrar_intereses
+
 
 
 int main()
-{ int opc,err, cod[MAX_CUENTAS]; // c骴igo cliente
+{
+  int opc,err;
+  int cod[MAX_CUENTAS]; // c贸digo cliente
   float saldo[MAX_CUENTAS], total;
   int imin,imax;
 
@@ -62,41 +64,39 @@ int main()
     do {
 
       opc = menu();
-
+      
       switch ( opc ) {
-
+        
         case 1:
           saldo_cuenta(cod,saldo);
-          break;
-
+        break;
+        
         case 2:
           transferencia(cod,saldo);
-          break;
-
+        break;
+        
         case 3:
           total = saldo_global(cod,saldo,&imin,&imax);
           printf("\nEn el banco hay ahora %.2f euros.\n",total);
           printf("La cuenta con menos dinero (%.2f euros) es la %03d y pertenece a %03d.\n",
-           saldo[imin],imin,cod[imin]);
+            saldo[imin],imin,cod[imin]);
           printf("La cuenta con mas dinero (%.2f euros) es la %03d y pertenece a %03d.\n",
-           saldo[imax],imax,cod[imax]);
-          break;
-
+            saldo[imax],imax,cod[imax]);
+        break;
+        
         case 4:
           cobrar_intereses(cod,saldo);
-          break;
-
+        break;
+        
       }
-
+      
     } while ( opc != 0 );
-
+    
     err = escribir_a_fichero(cod,saldo);
     if ( err != 0 ) {
       printf("\nError en la escritura del archivo de datos.\n\n");
       system("pause");
     }
-
   }
-
   return 0;
 }
