@@ -33,7 +33,7 @@ int menu();
 int leer_de_fichero(int cod[], float saldo[]);
 
 // Implementar función escribir_a_fichero
-
+int escribir_a_fichero(int cod[], float saldo[]);
 
 // Implementar función saldo_cuenta
 
@@ -153,6 +153,22 @@ int leer_de_fichero(int cod[], float saldo[]){
   cuentas = fopen (DATOS, "r" );
   if (cuentas == NULL) return -1;
   for(int i=0; fscanf(cuentas, "%d %f", &cod[i], &saldo[i]) != EOF; i++);
+  fclose (cuentas);
+  return 0;
+}
+
+/* Funcion escribir_a_fichero.
+ * Esta función guarda los valores de los vectores en el archivo de cuentas
+ *	Argumentos: vector de ints cod, vector de ints saldo
+ *  Retorno: Error al abrir un fichero.
+ */
+int escribir_a_fichero(int cod[], float saldo[]){
+  FILE *cuentas;
+  cuentas = fopen (DATOS, "w" );
+  if (cuentas == NULL) return -1;
+  for(int i=0; i < MAX_CUENTAS ; i++){
+    fprintf(cuentas, "%d %.2f\r\n",cod[i], saldo[i]) ;
+  }
   fclose (cuentas);
   return 0;
 }
