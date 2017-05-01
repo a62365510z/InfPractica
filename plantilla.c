@@ -297,7 +297,19 @@ float saldo_global(int cod[], float saldo[], int *imin, int *imax){
  * - Valor de retorno: Ninguno.
  */
 void cobrar_intereses(int cod[], float saldo[]){
+  float recaudado = 0, recaudo = 0;
   
+  for(int i=1; i < MAX_CUENTAS; i++){
+    if(cod[i] != LIBRE){
+      if(saldo[i] < 0){
+        recaudo = (-saldo[i]) / INTERES;
+        saldo[i] -= recaudo;
+        recaudado += recaudo;
+        saldo[COD_BANCO] += recaudo;
+      }
+    }
+  }
+  printf("El banco ha recaudado %.2f euros.\n\n", recaudado);
 }
 
 int pide_codigo(){
