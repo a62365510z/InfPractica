@@ -184,7 +184,23 @@ int escribir_a_fichero(int cod[], float saldo[]){
  * - Valor de retorno: Ninguno.
  */
 void saldo_cuenta(int cod[], float saldo[]){
-
+  int indice;
+  do{
+    printf("Codigo de la cuenta a consultar (0-%d): ", MAX_CUENTAS-1);
+    scanf ("%d", &indice);
+    if(indice < 0 && indice >= MAX_CUENTAS){
+      printf("\nError: Seleccione una cuenta entre 0 y %d.", MAX_CUENTAS-1);
+    }
+  }while(indice < 0 || indice >= MAX_CUENTAS);
+  
+  printf("\nLa cuenta con codigo %03d ", indice);
+  if(cod[indice] == LIBRE){
+    printf("esta actualmente sin usar.\n\n");
+  }else{
+    printf("pertenece al cliente con codigo %d.\n", cod[indice]);
+    printf("Su saldo es de %.2f euros.\n\n", saldo[indice]);
+  }
+  //SystemPause();
 }
 
 
@@ -200,10 +216,10 @@ void saldo_cuenta(int cod[], float saldo[]){
  * constante COMISION ) a la cuenta origen de la transferencia, ingresando esa
  * cantidad en la cuenta del banco (código COD_BANCO ). Si ambas cuentas son del
  * mismo cliente, se considera un traspaso entre sus cuentas y no se cobra comisión.
- * 
+ *
  * - Parámetros de entrada/salida: Vectores de códigos de clientes y de saldos.
  * - Valor de retorno: Ninguno.
- * 
+ *
  */
 void transferencia(int cod[], float saldo[]){
   
@@ -215,7 +231,7 @@ void transferencia(int cod[], float saldo[]){
  * las cuentas en uso, que es el total de dinero que hay en el banco. También se
  * indicará el número y saldo de la cuenta con menos dinero y de la cuenta con más
  * dinero.
- * 
+ *
  * - Parámetros de entrada: Vectores de códigos de clientes y de saldos.
  * - Parámetros de entrada/salida: Los códigos de las cuentas con menor y
  * mayor saldo.
