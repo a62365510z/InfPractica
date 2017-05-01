@@ -48,6 +48,7 @@ float saldo_global(int cod[], float saldo[], int *imin, int *imax);
 void cobrar_intereses(int cod[], float saldo[]);
 
 void SystemPause();
+int pide_codigo();
 
 /** Función main, llamada como primera función por el SO **/
 int main()
@@ -185,13 +186,7 @@ int escribir_a_fichero(int cod[], float saldo[]){
  */
 void saldo_cuenta(int cod[], float saldo[]){
   int indice;
-  do{
-    printf("Codigo de la cuenta a consultar (0-%d): ", MAX_CUENTAS-1);
-    scanf ("%d", &indice);
-    if(indice < 0 && indice >= MAX_CUENTAS){
-      printf("\nError: Seleccione una cuenta entre 0 y %d.", MAX_CUENTAS-1);
-    }
-  }while(indice < 0 || indice >= MAX_CUENTAS);
+  indice = pide_codigo();
   
   printf("\nLa cuenta con codigo %03d ", indice);
   if(cod[indice] == LIBRE){
@@ -255,4 +250,16 @@ float saldo_global(int cod[], float saldo[], int *imin, int *imax){
  */
 void cobrar_intereses(int cod[], float saldo[]){
   
+}
+
+int pide_codigo(){
+  int indice;
+  do{
+    printf("Codigo de la cuenta a consultar (0-%d): ", MAX_CUENTAS-1);
+    scanf ("%d", &indice);
+    if(indice < 0 || indice >= MAX_CUENTAS){
+      printf("\nError: Seleccione una cuenta entre 0 y %d.", MAX_CUENTAS-1);
+    }
+  }while(indice < 0 || indice >= MAX_CUENTAS);
+  return indice;
 }
