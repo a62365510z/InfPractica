@@ -46,7 +46,7 @@
 
 // Implementar función cobrar_intereses
 
-
+void SystemPause();
 
 int main()
 {
@@ -59,7 +59,7 @@ int main()
   if ( err != 0 ) {
 
     printf("\nError en la lectura del archivo de datos.\n\n");
-    system("pause");
+    SystemPause();
 
   } else {
 
@@ -97,7 +97,7 @@ int main()
     err = escribir_a_fichero(cod,saldo);
     if ( err != 0 ) {
       printf("\nError en la escritura del archivo de datos.\n\n");
-      system("pause");
+      SystemPause();
     }
   }
   return 0;
@@ -105,4 +105,16 @@ int main()
 
 
 /** Al final implementamos las funciones prototipieadas al principio**/
+
+/* Funcion SystemPause.
+ * Esta función emula un system("pause") haciendolo compatible con otros SO
+ *	Argumentos:
+ *  Retorno:
+ */
+void SystemPause(){
+  char ch;
+  while ((ch = getchar()) != '\n' && ch != EOF); //Vaciamos el buffer existente.
+  printf ("Presione Intro para continuar...");
+  getchar ();
+}
 
