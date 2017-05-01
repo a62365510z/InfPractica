@@ -85,6 +85,7 @@ int main()
             saldo[imin], imin, cod[imin]);
           printf("La cuenta con mas dinero (%.2f euros) es la %03d y pertenece a %03d.\n",
             saldo[imax], imax, cod[imax]);
+          printf("\n");
         break;
         
         case 4:
@@ -262,7 +263,27 @@ void transferencia(int cod[], float saldo[]){
  * tiene un saldo no nulo.
  */
 float saldo_global(int cod[], float saldo[], int *imin, int *imax){
+  float min, max = 0, total = 0;
   
+  for(int i=0; i < MAX_CUENTAS; i++){
+    if(cod[i] != LIBRE){
+      total += saldo[i];
+      if(saldo[i] > max){
+        max = saldo[i];
+        *imax = i;
+      }
+    }
+  }
+  min = max;
+  for(int i=0; i < MAX_CUENTAS; i++){
+    if(cod[i] != LIBRE){
+      if(saldo[i] < min){
+        min = saldo[i];
+        *imin = i;
+      }
+    }
+  }
+  return total;
 }
 
 
