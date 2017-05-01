@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/** Primero definimos las constantes o variables globales **/
 // Número máximo de cuentas
 #define MAX_CUENTAS 1000
 
@@ -24,6 +25,7 @@
 #define INTERES 10.0
 
 
+/** Luego definimos los prototipos de las funciones **/
 // Implementar función menu
 
 
@@ -100,3 +102,7 @@ int main()
   }
   return 0;
 }
+
+
+/** Al final implementamos las funciones prototipieadas al principio**/
+
