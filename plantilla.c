@@ -30,7 +30,7 @@
 int menu();
 
 // Implementar función leer_de_fichero
-
+int leer_de_fichero(int cod[], float saldo[]);
 
 // Implementar función escribir_a_fichero
 
@@ -50,17 +50,15 @@ void SystemPause();
 
 int main()
 {
-  int opc,err;
-  int cod[MAX_CUENTAS]; // código cliente
-  float saldo[MAX_CUENTAS], total;
-  int imin,imax;
+  int opc, err, imin, imax;
+  int cod[MAX_CUENTAS]; // códigos clientes
+  float saldo[MAX_CUENTAS]; //saldos clientes
+  float total;
 
-  err = leer_de_fichero(cod,saldo);
+  err = leer_de_fichero(cod, saldo);
   if ( err != 0 ) {
-
     printf("\nError en la lectura del archivo de datos.\n\n");
     SystemPause();
-
   } else {
 
     do {
@@ -142,4 +140,19 @@ int menu(){
 		}
 	}
 	return opcion;
+}
+
+/* Funcion leer_de_fichero.
+ * Esta función recoge los valores del archivo de cuentas y los devuelve por
+ * referencia como vectores cod y saldo
+ *	Argumentos: vector de ints cod, vector de ints saldo
+ *  Retorno: Error al leer un fichero.
+ */
+int leer_de_fichero(int cod[], float saldo[]){
+  FILE *cuentas;
+  cuentas = fopen (DATOS, "r" );
+  if (cuentas == NULL) return -1;
+  for(int i=0; fscanf(cuentas, "%d %f", &cod[i], &saldo[i]) != EOF; i++);
+  fclose (cuentas);
+  return 0;
 }
