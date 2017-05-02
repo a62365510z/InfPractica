@@ -110,7 +110,7 @@ int main()
 
 /* Funcion SystemPause.
  * Esta función emula un system("pause") haciendolo compatible con otros SO
- *	Argumentos:
+ *  Argumentos:
  *  Retorno:
  */
 void SystemPause(){
@@ -122,55 +122,57 @@ void SystemPause(){
 
 /* Funcion menu.
  * Esta función muestra un menú y pide la introducción de una opción correcta
- *	Argumentos:
+ *  Argumentos:
  *  Retorno: Valor introducido por el ususario.
  */
 int menu(){
-	int opcion;
-	do{
-		printf ("BANCO CO \n");
-		printf ("----------\n");
-		printf (" 0.Salir.\n");
-		printf (" 1.Consultar saldo de una cuenta.\n");
-		printf (" 2.Realizar transferencia\n");
-		printf (" 3.Saldo global del banco.\n");
-		printf (" 4.Cobrar intereses.\n\n");
-		
-		printf ("Elija opcion: ");
-		scanf ("%d", &opcion);
-		
-		if (opcion>4 || opcion<0) {
-			printf ("Opcion incorrecta. Por favor, indique una opcion válida.\n\n");
-		}
-	}while(opcion>4 || opcion<0);
-	return opcion;
+  int opcion;
+  do{
+    printf ("BANCO CO \n");
+    printf ("----------\n");
+    printf (" 0.Salir.\n");
+    printf (" 1.Consultar saldo de una cuenta.\n");
+    printf (" 2.Realizar transferencia\n");
+    printf (" 3.Saldo global del banco.\n");
+    printf (" 4.Cobrar intereses.\n\n");
+    
+    printf ("Elija opcion: ");
+    scanf ("%d", &opcion);
+    
+    if (opcion>4 || opcion<0) {
+      printf ("Opcion incorrecta. Por favor, indique una opcion valida.\n\n");
+    }
+  }while(opcion>4 || opcion<0);
+  return opcion;
 }
 
 /* Funcion leer_de_fichero.
  * Esta función recoge los valores del archivo de cuentas y los devuelve por
  * referencia como vectores cod y saldo
- *	- Parámetros de entrada: Vectores de códigos de clientes y de saldos.
+ *  - Parámetros de entrada: Vectores de códigos de clientes y de saldos.
  *  - Valor de retorno: Error al leer un fichero.
  */
 int leer_de_fichero(int cod[], float saldo[]){
+  int i;
   FILE *cuentas;
   cuentas = fopen (DATOS, "r" );
   if (cuentas == NULL) return 1;
-  for(int i=0; fscanf(cuentas, "%d %f", &cod[i], &saldo[i]) != EOF; i++);
+  for(i=0; fscanf(cuentas, "%d %f", &cod[i], &saldo[i]) != EOF; i++);
   fclose (cuentas);
   return 0;
 }
 
 /* Funcion escribir_a_fichero.
  * Esta función guarda los valores de los vectores en el archivo de cuentas
- *	- Parámetros de entrada: Vectores de códigos de clientes y de saldos.
+ *  - Parámetros de entrada: Vectores de códigos de clientes y de saldos.
  *  - Valor de retorno: Error al abrir un fichero.
  */
 int escribir_a_fichero(int cod[], float saldo[]){
+  int i;
   FILE *cuentas;
   cuentas = fopen (DATOS, "w" );
   if (cuentas == NULL) return 1;
-  for(int i=0; i < MAX_CUENTAS ; i++){
+  for(i=0; i < MAX_CUENTAS ; i++){
     fprintf(cuentas, "%d %.2f\r\n",cod[i], saldo[i]) ;
   }
   fclose (cuentas);
@@ -264,8 +266,9 @@ void transferencia(int cod[], float saldo[]){
  */
 float saldo_global(int cod[], float saldo[], int *imin, int *imax){
   float min, max = 0, total = 0;
+  int i;
   
-  for(int i=0; i < MAX_CUENTAS; i++){
+  for(i=0; i < MAX_CUENTAS; i++){
     if(cod[i] != LIBRE){
       total += saldo[i];
       if(saldo[i] > max){
@@ -275,7 +278,7 @@ float saldo_global(int cod[], float saldo[], int *imin, int *imax){
     }
   }
   min = max;
-  for(int i=0; i < MAX_CUENTAS; i++){
+  for(i=0; i < MAX_CUENTAS; i++){
     if(cod[i] != LIBRE){
       if(saldo[i] < min){
         min = saldo[i];
@@ -298,8 +301,9 @@ float saldo_global(int cod[], float saldo[], int *imin, int *imax){
  */
 void cobrar_intereses(int cod[], float saldo[]){
   float recaudado = 0, recaudo = 0;
+  int i;
   
-  for(int i=1; i < MAX_CUENTAS; i++){
+  for(i=1; i < MAX_CUENTAS; i++){
     if(cod[i] != LIBRE){
       if(saldo[i] < 0){
         recaudo = (-saldo[i]) / INTERES;
